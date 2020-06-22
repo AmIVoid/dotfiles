@@ -1,0 +1,1 @@
+/home/void/dotfile/.fancy-bash-prompt.sh

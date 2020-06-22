@@ -1,0 +1,417 @@
+[colors]
+include-file = ~/.config/polybar/colors
+
+[bar/mybar]
+monitor = eDP-1
+
+fixed-center = true
+
+margin-top = 0
+margin-bottom = 0
+
+width = 100%
+height = 30
+
+background = #CC000000
+foreground = #e0e0e0
+
+radius = 0
+
+set strip-wsnumbers = true
+
+line-size = 0
+line-color = #f00
+
+padding-right = 4
+
+module-margin = 2
+
+font-0 = "Roboto:style=Regular:size=10;1"
+font-1 = "Source Han Sans JP,源ノ角ゴシック JP":style=Regular:pixelsize=10;1"
+font-2 = "FontAwesome5Pro:style=Solid:size=10;0.5"
+font-3 = "symbola:scale=12;0"
+
+modules-left = i3
+modules-center = date
+modules-right = pulseaudio sep battery sep memory sep cpu sep temperature sep backlight sep 
+
+separator =
+
+spacing = 0
+
+; Opacity value between 0.0 and 1.0 used on fade in/out
+dim-value = 1
+
+wm-name = i3
+tray-position = right
+tray-detached = false
+tray-maxsize = 16
+tray-background = ${root.background}
+tray-offset-x = 0
+tray-offset-y = 0
+tray-padding = 0
+tray-scale = 1.0
+
+dpi-x = 96
+dpi-y = 96
+
+enable-ipc = false
+
+[module/i3]
+type = internal/i3
+
+; Only show workspaces defined on the same output as the bar
+;
+; Useful if you want to show monitor specific workspaces
+; on different bars
+;
+; Default: false
+pin-workspaces = true
+
+; This will split the workspace name on ':'
+; Default: false
+strip-wsnumbers = true
+
+; Sort the workspaces by index instead of the default
+; sorting that groups the workspaces by output
+; Default: false
+index-sort = true
+
+; Create click handler used to focus workspace
+; Default: true
+enable-click = true
+
+; Create scroll handlers used to cycle workspaces
+; Default: true
+enable-scroll = false
+
+; Wrap around when reaching the first/last workspace
+; Default: true
+wrapping-scroll = false
+
+; Set the scroll cycle direction 
+; Default: true
+reverse-scroll = false
+
+; Use fuzzy (partial) matching on labels when assigning 
+; icons to workspaces
+; Example: code;♚ will apply the icon to all workspaces 
+; containing 'code' in the label
+; Default: false
+fuzzy-match = true
+
+label-unfocused = %name%
+label-unfocused-padding = 4
+label-unfocused-foreground = ${colors.fg6}
+
+label-focused = %name%
+label-focused-foreground = ${colors.fg6}
+label-focused-background = ${colors.background}
+label-focused-underline = ${colors.fg3}
+label-focused-padding = 4
+
+[module/date]
+type = internal/date
+
+; Seconds to sleep between updates
+interval = 1.0
+
+; See "http://en.cppreference.com/w/cpp/io/manip/put_time" for details on how to format the date string
+; NOTE: if you want to use syntax tags here you need to use %%{...}
+date = %Y-%m-%d%
+
+; Optional time format
+time = %I:%M %p
+
+; if `date-alt` or `time-alt` is defined, clicking
+; the module will toggle between formats
+date-alt = %A, %d %B %Y
+time-alt = %A, %d %B %Y
+
+label = %time%
+label-font = 0
+label-foreground = ${colors.fg6}
+
+[module/wireless-network]
+type = internal/network
+interface = wlo1
+
+label-connected = %essid%
+format-connected = <ramp-signal>
+label-connected-foreground = ${colors.fg6}
+
+format-disconnected = <label-disconnected>
+label-disconnected = 
+label-disconnected-foreground = ${colors.urgent}
+
+ramp-signal-foreground = ${colors.fg6}
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-5 = 
+
+[module/cpu]
+type = internal/cpu
+
+; Seconds to sleep between updates
+; Default: 1
+interval = 2
+
+label =  %percentage%%
+
+label-foreground = ${colors.fg6}
+label-padding-right = 1
+
+[module/memory]
+type = internal/memory
+
+; Seconds to sleep between updates
+; Default: 1
+interval = 2
+format = <label>
+
+; Available tokens:
+;   %percentage_used% (default)
+;   %percentage_free%
+;   %gb_used%
+;   %gb_free%
+;   %gb_total%
+;   %mb_used%
+;   %mb_free%
+;   %mb_total%
+;   %percentage_swap_used%
+;   %percentage_swap_free%
+;   %mb_swap_total%
+;   %mb_swap_free%
+;   %mb_swap_used%
+;   %gb_swap_total%
+;   %gb_swap_free%
+;   %gb_swap_used%
+
+label =  %percentage_used%%
+
+label-foreground = ${colors.fg6}
+
+[module/temperature]
+type = internal/temperature
+
+; Seconds to sleep between updates
+; Default: 1
+interval = 10
+
+; Thermal zone to use
+; To list all the zone types, run 
+; $ for i in /sys/class/thermal/thermal_zone*; do echo "$i: $(<$i/type)"; done
+; Default: 0
+thermal-zone = 0
+
+; Full path of temperature sysfs path
+; Use `sensors` to find preferred temperature source, then run
+; $ for i in /sys/class/hwmon/hwmon*/temp*_input; do echo "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*})) $(readlink -f $i)"; done
+; to find path to desired file
+; Default reverts to thermal zone setting
+hwmon-path = /sys/devices/virtual/thermal/thermal_zone0/hwmon0/temp1_input
+
+; Threshold temperature to display warning label (in degrees celsius)
+; Default: 80
+warn-temperature = 60
+
+format = <label>
+
+; Available tags:
+;   <label-warn> (default)
+
+; Available tokens:
+;   %temperature% (deprecated)
+;   %temperature-c%   (default, temperature in °C)
+;   %temperature-f%   (temperature in °F)
+label =  %temperature-c%
+label-warn =  %temperature-c%
+
+label-foreground = ${colors.fg6}
+label-warn-foreground = #DC322F
+
+[module/decor-glyph]
+type = custom/text
+content-foreground = ${colors.foreground}
+margin = 0
+
+[module/sep]
+inherit = module/decor-glyph
+content = "/"
+
+[module/battery]
+type = internal/battery
+
+; This is useful in case the battery never reports 100% charge
+full-at = 98
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT0
+adapter = AC0
+
+; If an inotify event haven't been reported in this many
+; seconds, manually poll for new values.
+;
+; Needed as a fallback for systems that don't report events
+; on sysfs/procfs.
+;
+; Disable polling by setting the interval to 0.
+;
+; Default: 5
+poll-interval = 5
+; see "man date" for details on how to format the time string
+; NOTE: if you want to use syntax tags here you need to use %%{...}
+; Default: %H:%M:%S
+time-format = %H:%M
+
+; Available tags:
+;   <label-charging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-charging>
+format-charging = <animation-charging> <label-charging>
+
+; Available tags:
+;   <label-discharging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-discharging>
+format-discharging = <ramp-capacity> <label-discharging>
+
+; Available tags:
+;   <label-full> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+format-full = <ramp-capacity> <label-full>
+
+; Available tokens:
+;   %percentage% (default)
+;   %time%
+;   %consumption% (shows current charge rate in watts)
+label-charging =  %percentage%%
+label-charging-foreground = ${colors.fg7}
+animation-charging-foreground = ${colors.fg7}
+
+; Available tokens:
+;   %percentage% (default)
+;   %time%
+;   %consumption% (shows current discharge rate in watts)
+label-discharging =  %percentage%%
+
+; Available tokens:
+;   %percentage% (default)
+; label-full = 
+label-full-foreground = ${colors.fg7}
+
+; Only applies if <ramp-capacity> is used
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+; Only applies if <bar-capacity> is used
+bar-capacity-width = 10
+
+; Only applies if <animation-charging> is used
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+; Framerate in milliseconds
+animation-charging-framerate = 750
+
+; Only applies if <animation-discharging> is used
+animation-discharging-0 = 
+animation-discharging-1 = 
+animation-discharging-2 = 
+animation-discharging-3 = 
+animation-discharging-4 = 
+; Framerate in milliseconds
+animation-discharging-framerate = 500
+label-discharging-foreground = ${colors.fg6}
+animation-discharging-foreground = ${colors.fg6}
+ramp-capacity-foreground = ${colors.fg6}
+
+[module/backlight]
+type = internal/backlight
+
+; Use the following command to list available cards:
+; $ ls -1 /sys/class/backlight/
+card = intel_backlight
+format = <ramp> <label>
+ramp-foreground = ${colors.fg6}
+; Only applies if <ramp> is used
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+
+; Available tokens:
+;   %percentage% (default)
+label = %percentage%%
+label-foreground = ${colors.fg6}
+
+[module/pulseaudio]
+type = internal/alsa
+
+; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+; If not, uses default sink
+; sink = alsa_output.pci-0000_00_1f.3.analog-stereo
+
+; Use PA_VOLUME_UI_MAX (~153%) if true, or PA_VOLUME_NORM (100%) if false
+; Default: true
+use-ui-max = false
+
+; Interval for volume increase/decrease (in percent points) (unreleased)
+; Default: 5
+; interval = 5
+
+; Available tags:
+;   <label-volume> (default)
+;   <ramp-volume>
+;   <bar-volume>
+format-volume = <ramp-volume> <label-volume>
+
+; Available tags:
+;   <label-muted> (default)
+;   <ramp-volume>
+;   <bar-volume>
+;format-muted = <label-muted>
+
+; Available tokens:
+;   %percentage% (default)
+label-volume = %percentage%%
+
+; Available tokens:
+;   %percentage% (default)
+label-muted =  Muted
+label-muted-foreground = ${colors.fg6}
+
+; Only applies if <ramp-volume> is used
+ramp-volume-0 = 
+ramp-volume-1 =  
+ramp-volume-2 = 
+ramp-volume-foreground = ${colors.fg6}
+label-volume-foreground = ${colors.fg6}
+
+[module/spotify]
+type = custom/script
+interval = 1
+format-prefix = " "
+format = <label>
+exec = python /home/void/polybar-spotify/spotify_status.py -f '{artist}: {song}'
+format-underline = ${colors.fg6}
+
+[module/weather]
+type = custom/script
+exec = /home/void/polybar-forecast/config.toml
+exec-if = ping openweathermap.org -c 1
+interval = 600
+label-font = 3
