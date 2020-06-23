@@ -1,1 +1,0 @@
-/home/void/dotfile/.bash_profile
